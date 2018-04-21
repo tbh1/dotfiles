@@ -44,6 +44,10 @@ if [ $commands[minikube] ]; then
   source <(minikube completion zsh)
 fi
 
+if [ $commands[helm] ]; then
+  source <(helm completion zsh)
+fi
+
 # Shell theme
 ZSH_THEME="robbyrussell"
 autoload -U colors; colors
