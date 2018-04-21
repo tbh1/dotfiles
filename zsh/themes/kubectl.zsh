@@ -1,4 +1,4 @@
-# Taken from https://github.com/superbrothers/zsh-kubectl-prompt
+# Based on https://github.com/superbrothers/zsh-kubectl-prompt
 setopt prompt_subst
 autoload -U add-zsh-hook
 
@@ -50,6 +50,10 @@ function _zsh_kubectl_prompt_precmd() {
     if ! context="$(kubectl config current-context 2>/dev/null)"; then
         ZSH_KUBECTL_PROMPT="current-context is not set"
         return 1
+    fi
+
+    if [ ${#context} -ge 24 ]; then
+        context=$(echo $context | awk '{print substr($0,0,10) "..." substr($0,length($0)-9,10)}')
     fi
 
     zstyle -s ':zsh-kubectl-prompt:' namespace namespace
