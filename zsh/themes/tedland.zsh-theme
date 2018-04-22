@@ -1,4 +1,5 @@
-# Based on kiwi and mortalscumbag
+# Theme based on kiwi, jonathan, and mortalscumbag
+# Kubectl info based on https://github.com/superbrothers/zsh-kubectl-prompt
 
 function get_time() {
   echo $(date +%H:%M:%S)
@@ -87,7 +88,6 @@ function _zsh_gcloud_prompt_precmd() {
 
     zstyle -s ':zsh-gcloud-prompt:' separator separator
     ZSH_GCLOUD_PROMPT="G ${project}${separator}${acct}"
-    echo "GCLOUD PROMPT = $ZSH_GCLOUD_PROMPT"
 
     return 0
 }
@@ -235,4 +235,3 @@ ZSH_THEME_GIT_PROMPT_PREFIX="-[%{$reset_color%}%{$fg[white]%}git:%{$fg_bold[whit
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg_bold[green]%}]"
 
 autoload -U colors; colors
-
