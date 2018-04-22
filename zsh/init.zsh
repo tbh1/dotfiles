@@ -3,12 +3,11 @@
 DIRNAME="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # Environment variables
+export DOTFILES=$DIRNAME
 export GOPATH=$HOME/go
 export GROOVY_HOME=/opt/groovy/2.4.7/
 export VISUAL=vim
 export EDITOR="$VISUAL"
-# export KOTLIN_HOME=/opt/jetbrains/kotlinc/1.1.4
-# export ANDROID_HOME=$HOME/android/sdk
 export GOOGLE_CLOUD_SDK=/opt/google/cloud/sdk
 
 # Path configuration
@@ -47,10 +46,3 @@ fi
 if [ $commands[helm] ]; then
   source <(helm completion zsh)
 fi
-
-# Shell theme
-ZSH_THEME="robbyrussell"
-autoload -U colors; colors
-source $DIRNAME/themes/kubectl.zsh
-source $DIRNAME/themes/gcloud.zsh
-RPROMPT='%{$fg[yellow]%}[$ZSH_GCLOUD_PROMPT]%{$reset_color%}%{$fg[green]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
