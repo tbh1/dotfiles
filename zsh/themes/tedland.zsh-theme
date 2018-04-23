@@ -48,7 +48,7 @@ function _zsh_gcloud_prompt_precmd() {
 
     gcloud_home="$HOME/.config/gcloud"
     gcloud_active_config="$gcloud_home/active_config"
-    if [ ! -a $gcloud_active_config ]; then
+    if [ ! -f "$gcloud_active_config" ]; then
         ZSH_GCLOUD_PROMPT="G ?"
         return 1
     fi
