@@ -48,19 +48,23 @@ function _zsh_gcloud_prompt_precmd() {
 
     gcloud_home="$HOME/.config/gcloud"
     gcloud_active_config="$gcloud_home/active_config"
+    if [ ! -a $gcloud_active_config ]; then
+        ZSH_GCLOUD_PROMPT="G ?"
+        return 1
+    fi
     gcloud_config="$gcloud_home/configurations/config_$(cat $gcloud_active_config)"
 
     zstyle -s ':zsh-gcloud-prompt:' modified_time_fmt modified_time_fmt
 
     # get the last time the profile changed
     if ! active_config_now="$(stat $modified_time_fmt "$gcloud_active_config" 2>/dev/null)"; then
-        ZSH_GCLOUD_PROMPT="gcloud is not found"
+        ZSH_GCLOUD_PROMPT="G ?"
         return 1
     fi
 
     # get the last time the active profile's configuration changed 
     if ! config_now="$(stat $modified_time_fmt "$gcloud_config" 2>/dev/null)"; then
-        ZSH_GCLOUD_PROMPT="gcloud is not found"
+        ZSH_GCLOUD_PROMPT="G ?"
         return 1
     fi
 
@@ -73,7 +77,7 @@ function _zsh_gcloud_prompt_precmd() {
     zstyle ':zsh-gcloud-prompt:' config_updated_at "$config_now"
 
     if ! project="$(gcloud config get-value project 2>/dev/null)"; then
-        ZSH_GCLOUD_PROMPT="gcloud project is not set"
+        ZSH_GCLOUD_PROMPT="G ?"
         return 1
     fi
 
@@ -127,7 +131,7 @@ function _zsh_kubectl_prompt_precmd() {
 
     zstyle -s ':zsh-kubectl-prompt:' modified_time_fmt modified_time_fmt
     if ! now="$(stat $modified_time_fmt "$kubeconfig" 2>/dev/null)"; then
-        ZSH_KUBECTL_PROMPT="kubeconfig is not found"
+        ZSH_KUBECTL_PROMPT="⎈ ?"
         return 1
     fi
 
@@ -138,7 +142,7 @@ function _zsh_kubectl_prompt_precmd() {
     zstyle ':zsh-kubectl-prompt:' updated_at "$now"
 
     if ! context="$(kubectl config current-context 2>/dev/null)"; then
-        ZSH_KUBECTL_PROMPT="current-context is not set"
+        ZSH_KUBECTL_PROMPT="⎈ ?"
         return 1
     fi
 
@@ -148,7 +152,7 @@ function _zsh_kubectl_prompt_precmd() {
 
     zstyle -s ':zsh-kubectl-prompt:' namespace namespace
     if [[ "$namespace" != true ]]; then
-        ZSH_KUBECTL_PROMPT="${context}"
+        ZSH_KUBECTL_PROMPT="⎈ ${context}"
         return 0
     fi
 

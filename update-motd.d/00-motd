@@ -1,0 +1,39 @@
+#!/bin/bash
+
+banner="$(cat motd-banner.txt)"
+
+# Get OS Info
+[ -r /etc/lsb-release ] && . /etc/lsb-release
+
+if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb_release ]; then
+	# Fall back to using the very slow lsb_release utility
+	DISTRIB_DESCRIPTION=$(lsb_release -s -d)
+fi
+os_info=$(printf "%s (%s %s)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)")
+banner=$(sed 's${{OS_INFO}}$'"$os_info"'$' <<< "$banner")
+
+# Get Public IP
+ip_address=$(curl ipinfo.io/ip)
+banner=$(sed 's${{IP_ADDRESS}}$'"$ip_address"'$' <<< "$banner")
+
+# Get Package Updates
+stamp="/var/lib/update-notifier/updates-available"
+stamp_text=$([ ! -r "$stamp" ] || cat "$stamp")
+package_updates=$(echo "$stamp_text" | grep -i 'package can be updated')
+security_updates=$(echo "$stamp_text" | grep -i 'security updates')
+banner=$(sed 's${{PACKAGE_UPDATES}}$'"$package_updates"'$' <<< "$banner")
+banner=$(sed 's${{SECURITY_UPDATES}}$'"$security_updates"'$' <<< "$banner")
+
+# Get Restart Required
+if [ -x /usr/lib/update-notifier/update-motd-reboot-required ]; then
+    reboot_required=$(exec /usr/lib/update-notifier/update-motd-reboot-required)
+fi
+banner=$(sed 's${{REBOOT_REQUIRED}}$'"$reboot_required"'$' <<< "$banner")
+
+# Check for New Releases
+if [ -x /usr/lib/ubuntu-release-upgrader/release-upgrade-motd ]; then
+    release_upgrade=$(exec /usr/lib/ubuntu-release-upgrader/release-upgrade-motd)
+fi
+banner=$(sed 's${{RELEASE_UPGRADE}}$'"$release_upgrade"'$' <<< "$banner")
+
+echo "$banner"
