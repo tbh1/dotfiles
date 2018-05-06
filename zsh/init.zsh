@@ -1,5 +1,4 @@
 #!/bin/zsh
-
 DIRNAME="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # Environment variables
@@ -12,6 +11,7 @@ export GOOGLE_CLOUD_SDK=/opt/google/cloud/sdk
 
 # Path configuration
 export PATH=$PATH:$DIRNAME/util
+export PATH=$PATH:$HOME/go/bin
 
 # Aliases
 alias flushdns="sudo /etc/init.d/dns-clean restart"
@@ -24,7 +24,6 @@ alias ups="sudo apt update && sudo apt upgrade -y"
 alias zedit="subl -nw ~/.zprofile && source ~/.zprofile && echo changes applied"
 alias ledger="sudo udevadm control --reload-rules"
 
-
 # Functions
 tfup() {
 	docker run --rm -p 8888:8888 -it --name tfps \
@@ -35,13 +34,13 @@ tfup() {
 # Completions
 for f in $DIRNAME/completions/*; do source $f; done
 
-if [ $commands[oc] ]; then
-  source <(oc completion zsh)
-fi
+# if [ $commands[oc] ]; then
+#   source <(oc completion zsh)
+# fi
 
-if [ $commands[minikube] ]; then
-  source <(minikube completion zsh)
-fi
+# if [ $commands[minikube] ]; then
+#   source <(minikube completion zsh)
+# fi
 
 if [ $commands[helm] ]; then
   source <(helm completion zsh)

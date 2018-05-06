@@ -5,15 +5,6 @@ function get_time() {
   echo $(date +%H:%M:%S)
 }
 
-# function pcf_info() {
-#   setopt +o nomatch
-#   if ls manifest*ml 1> /dev/null 2>&1; then
-#     CF_ORG="$(cf target | grep -i org: | awk '{print $2}')"
-#     CF_SPACE="$(cf target | grep -i space: | awk '{print $2}')"
-#     echo "-[%{$reset_color%}%{$fg[white]%}pcf:%{$fg_bold[white]%}%{$fg_bold[yellow]%}${CF_ORG}:${CF_SPACE}%{$fg_bold[green]%}]"
-#   fi
-# }
-
 autoload -U add-zsh-hook
 setopt prompt_subst
 
@@ -45,6 +36,7 @@ add-zsh-hook precmd _zsh_gcloud_prompt_precmd
 function _zsh_gcloud_prompt_precmd() {
     local gcloud_home gcloud_config gcloud_active_config active_updated_at active_now 
     local config_updated_at config_now project account acct separator modified_time_fmt
+    local prompt_cache_updated_at prompt_cache prompt_cache_now
 
     gcloud_home="$HOME/.config/gcloud"
     gcloud_active_config="$gcloud_home/active_config"
@@ -57,7 +49,7 @@ function _zsh_gcloud_prompt_precmd() {
     zstyle -s ':zsh-gcloud-prompt:' modified_time_fmt modified_time_fmt
 
     # get the last time the profile changed
-    if ! active_config_now="$(stat $modified_time_fmt "$gcloud_active_config" 2>/dev/null)"; then
+    if ! active_now="$(stat $modified_time_fmt "$gcloud_active_config" 2>/dev/null)"; then
         ZSH_GCLOUD_PROMPT="G ?"
         return 1
     fi
@@ -68,6 +60,16 @@ function _zsh_gcloud_prompt_precmd() {
         return 1
     fi
 
+    # attempt to use cached prompt
+    prompt_cache="$gcloud_home/prompt_cache"
+    prompt_cache_now="$(stat $modified_time_fmt "$prompt_cache" 2>/dev/null)"
+
+    if [[ "$prompt_cache_now" > "$active_now" && "$prompt_cache_now" > "$config_now" ]]; then
+        ZSH_GCLOUD_PROMPT="$(cat $prompt_cache)"
+        return 0;
+    fi
+
+    zstyle -s ':zsh-gcloud-prompt:' prompt_cache_updated_at prompt_cache_updated_at
     zstyle -s ':zsh-gcloud-prompt:' active_updated_at active_updated_at
     zstyle -s ':zsh-gcloud-prompt:' config_updated_at config_updated_at
     if [[ "$active_updated_at" == "$active_now" && "$config_updated_at" == "$config_now"  ]]; then
@@ -75,6 +77,7 @@ function _zsh_gcloud_prompt_precmd() {
     fi
     zstyle ':zsh-gcloud-prompt:' active_updated_at "$active_now"
     zstyle ':zsh-gcloud-prompt:' config_updated_at "$config_now"
+    zstyle ':zsh-gcloud-prompt:' prompt_cache_updated_at "$prompt_cache_now"
 
     if ! project="$(gcloud config get-value project 2>/dev/null)"; then
         ZSH_GCLOUD_PROMPT="G ?"
@@ -84,6 +87,7 @@ function _zsh_gcloud_prompt_precmd() {
     zstyle -s ':zsh-gcloud-prompt:' account account
     if [[ "$account" != true ]]; then
         ZSH_GCLOUD_PROMPT="${project}"
+        echo $ZSH_GCLOUD_PROMPT > $prompt_cache
         return 0
     fi
 
@@ -92,7 +96,7 @@ function _zsh_gcloud_prompt_precmd() {
 
     zstyle -s ':zsh-gcloud-prompt:' separator separator
     ZSH_GCLOUD_PROMPT="G ${project}${separator}${acct}"
-
+    echo $ZSH_GCLOUD_PROMPT > $prompt_cache
     return 0
 }
 
@@ -164,8 +168,6 @@ function _zsh_kubectl_prompt_precmd() {
 
     return 0
 }
-
-
 
 function my_git_prompt() {
   tester=$(git rev-parse --git-dir 2> /dev/null) || return
