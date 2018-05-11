@@ -26,6 +26,22 @@ else
     echo $DOTFILES_MIXIN >> $HOME/.zshrc
 fi
 
+# Add vim config
+if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
+    echo "installing vim-plug"
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+if [ ! -f "$HOME/.vimrc" ]; then
+    touch "$HOME/.vimrc"
+fi
+
+VIMRC_MIXIN="source $DIRNAME/vim/vim_profile"
+if ! grep -q VIMRC_MIXIN "$HOME/.vimrc"; then
+    echo "\n$VIMRC_MIXIN" >> "$HOME/.vimrc"
+fi
+
 source $HOME/.zshrc
 
 echo "dotfile initialization complete"

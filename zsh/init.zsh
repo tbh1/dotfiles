@@ -1,6 +1,9 @@
 #!/bin/zsh
 DIRNAME="$( cd "$(dirname "$0")" ; pwd -P )"
 
+# Shell behavior
+bindkey -v
+
 # Environment variables
 export DOTFILES=$DIRNAME
 export GOPATH=$HOME/go

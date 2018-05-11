@@ -1,0 +1,30 @@
+" Vim Plug
+call plug#begin()
+Plug 'tpope/vim-sensible'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-surround'
+Plug 'bling/vim-airline'
+Plug 'pangloss/vim-javascript'
+Plug 'flazz/vim-colorschemes'
+Plug 'https://github.com/miconda/lucariox.vim.git'
+"Plug 'HenryNewcomer/vim-theme-papaya'
+call plug#end()
+
+" Basic settings
+:set number relativenumber
+:set ruler
+:set background=dark
+syntax on
+
+" NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+map <C-n> :NERDTreeToggle<CR>
+
+" Color Scheme
+colorscheme lucariox
