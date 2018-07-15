@@ -10,13 +10,12 @@ Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
 Plug 'pangloss/vim-javascript'
 Plug 'flazz/vim-colorschemes'
-Plug 'https://github.com/miconda/lucariox.vim.git'
-"Plug 'HenryNewcomer/vim-theme-papaya'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'SirVer/ultisnips'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'dag/vim-fish'
 call plug#end()
-
 
 " Basic settings
 :set number relativenumber
@@ -63,13 +62,12 @@ let g:go_addtags_transform = "camelcase"
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
 
-
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
 " Color Scheme
-colorscheme lucariox
 
-" Dont use fish as shell, not POSIX compatible
+" Vim needs a more POSIX compatible shell than fish
 if &shell =~# 'fish$'
     set shell=sh
 endif
-
