@@ -66,6 +66,7 @@ function _zsh_gcloud_prompt_precmd() {
 
     if [[ "$prompt_cache_now" > "$active_now" && "$prompt_cache_now" > "$config_now" ]]; then
         ZSH_GCLOUD_PROMPT="$(cat $prompt_cache)"
+        set_term_alert_color "$(cat $prompt_cache)"
         return 0;
     fi
 
@@ -88,6 +89,7 @@ function _zsh_gcloud_prompt_precmd() {
     if [[ "$account" != true ]]; then
         ZSH_GCLOUD_PROMPT="${project}"
         echo $ZSH_GCLOUD_PROMPT > $prompt_cache
+        set_term_alert_color $project
         return 0
     fi
 
@@ -97,6 +99,7 @@ function _zsh_gcloud_prompt_precmd() {
     zstyle -s ':zsh-gcloud-prompt:' separator separator
     ZSH_GCLOUD_PROMPT="G ${project}${separator}${acct}"
     echo $ZSH_GCLOUD_PROMPT > $prompt_cache
+    set_term_alert_color $project
     return 0
 }
 
@@ -122,6 +125,30 @@ function() {
         modified_time_fmt='-f%m' # FreeBSD
     fi
     zstyle ':zsh-kubectl-prompt:' modified_time_fmt $modified_time_fmt
+}
+
+function set_term_alert_color() {
+    if [[ "$1" =~ pr-1sc.* ]]; then
+        echo "WARNING: TARGETING PRODUCTION SYSTEM!!!"
+        set_term_bgcolor 80 0 0
+    else
+        set_term_bgcolor 21 33 34
+    fi
+}
+
+function set_term_bgcolor(){
+  local R=$1
+  local G=$2
+  local B=$3
+  /usr/bin/osascript <<EOF
+tell application "iTerm"
+  tell the current window
+    tell the current session
+      set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+    end tell
+  end tell
+end tell
+EOF
 }
 
 add-zsh-hook precmd _zsh_kubectl_prompt_precmd

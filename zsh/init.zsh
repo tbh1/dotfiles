@@ -2,7 +2,7 @@
 DIRNAME="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # Shell behavior
-bindkey -v
+#bindkey -v
 
 # Environment variables
 export DOTFILES=$DIRNAME
