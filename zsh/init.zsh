@@ -3,14 +3,16 @@ DIRNAME="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # Shell behavior
 #bindkey -v
+unsetopt beep
 
 # Environment variables
-export DOTFILES=$DIRNAME
 export GOPATH=$HOME/go
+export GOROOT=/usr/lib/go
 export GROOVY_HOME=/opt/groovy/2.4.7/
 export VISUAL=vim
 export EDITOR="$VISUAL"
 export GOOGLE_CLOUD_SDK=/opt/google/cloud/sdk
+export ZSH_TMUX_AUTOSTART=true
 
 # Path configuration
 export PATH=$PATH:$DIRNAME/util
@@ -26,6 +28,7 @@ alias pbpaste='xclip -selection clipboard -o'
 alias ups="sudo apt update && sudo apt upgrade -y"
 alias zedit="subl -nw ~/.zprofile && source ~/.zprofile && echo changes applied"
 alias ledger="sudo udevadm control --reload-rules"
+alias vim="nvim"
 
 # Functions
 tfup() {

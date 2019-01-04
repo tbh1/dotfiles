@@ -6,14 +6,16 @@ Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
 Plug 'pangloss/vim-javascript'
 Plug 'flazz/vim-colorschemes'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'zchee/deoplete-go', { 'do': 'make' }
+" Plug 'Shougo/neosnippet.vim'
+" Plug 'Shougo/neosnippet-snippets'
 Plug 'dag/vim-fish'
 call plug#end()
 
@@ -40,8 +42,9 @@ nnoremap <leader>a : cclose<CR>
 " autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 
-" let g:go_list_type = 'quickfix'
+let g:go_list_type = 'quickfix'
 
+filetype plugin on
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
 
 " run :GoBuild or :GoTestCompile based on the go file
@@ -64,6 +67,10 @@ autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_start_length = 1
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+let g:deoplete#num_processes = 1
 
 " Color Scheme
 
