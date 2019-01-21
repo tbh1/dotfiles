@@ -15,7 +15,7 @@ export GOOGLE_CLOUD_SDK=/opt/google/cloud/sdk
 export ZSH_TMUX_AUTOSTART=true
 
 # Path configuration
-export PATH=$PATH:$DIRNAME/util
+export PATH=$PATH:$DIRNAME/bin
 export PATH=$PATH:$HOME/go/bin
 
 # Aliases
@@ -36,6 +36,9 @@ tfup() {
 	-v ${1:-`pwd`}:/notebooks:rw \
 	tensorflow/tensorflow
 }
+
+# Extra utilities
+source $DIRNAME/util/*
 
 # Completions
 for f in $DIRNAME/completions/*; do source $f; done
