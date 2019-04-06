@@ -137,6 +137,9 @@ function set_term_alert_color() {
 }
 
 function set_term_bgcolor(){
+  if [ ! -f /usr/bin/osascript ] ; then
+    return
+  fi
   local R=$1
   local G=$2
   local B=$3
