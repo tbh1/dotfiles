@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+sudo modprobe -rfv iwlmvm
+sleep 3
+sudo modprobe -a iwlmvm
